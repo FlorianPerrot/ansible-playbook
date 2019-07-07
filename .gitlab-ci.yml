@@ -13,7 +13,7 @@ Package:
     - docker:dind
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CI_REGISTRY_IMAGE:alpine3 -f /alpine3/Dockerfile .
+    - docker build -t $CI_REGISTRY_IMAGE:alpine3 -f alpine3/Dockerfile .
     - docker push $CI_REGISTRY_IMAGE:alpine3
   only:
     - master
