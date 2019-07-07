@@ -1,0 +1,31 @@
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+
+stages:
+  - Package 🐳
+  - Dockerhub 🚀
+
+Package:
+  stage: Package 🐳
+  image: docker
+  services:
+    - docker:dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:alpine3 -f /alpine3/Dockerfile .
+    - docker push $CI_REGISTRY_IMAGE:alpine3
+  only:
+    - master
+
+Push to dockerhub:
+  stage: Dockerhub 🚀
+  image: docker
+  services:
+    - docker:dind
+  script:
+    - docker login -u $DOCKERHUB_REGISTRY_USER -p $DOCKERHUB_REGISTRY_PASSWORD
+    - docker tag $CI_REGISTRY_IMAGE:alpine3 florianperrot/ansible-playbook:alpine3
+    - docker push florianperrot/ansible-playbook:alpine3
+  only:
+    - master
