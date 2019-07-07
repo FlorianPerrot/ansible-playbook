@@ -6,13 +6,16 @@ stages:
   - Package 🐳
   - Dockerhub 🚀
 
+before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  - docker login -u $DOCKERHUB_REGISTRY_USER -p $DOCKERHUB_REGISTRY_PASSWORD
+
 Package:
   stage: Package 🐳
   image: docker
   services:
     - docker:dind
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $CI_REGISTRY_IMAGE:alpine3 -f alpine3/Dockerfile .
     - docker push $CI_REGISTRY_IMAGE:alpine3
   only:
@@ -24,7 +27,7 @@ Push to dockerhub:
   services:
     - docker:dind
   script:
-    - docker login -u $DOCKERHUB_REGISTRY_USER -p $DOCKERHUB_REGISTRY_PASSWORD
+    - docker pull $CI_REGISTRY_IMAGE:alpine3
     - docker tag $CI_REGISTRY_IMAGE:alpine3 florianperrot/ansible-playbook:alpine3
     - docker push florianperrot/ansible-playbook:alpine3
   only:
