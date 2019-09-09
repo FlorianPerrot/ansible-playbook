@@ -12,9 +12,9 @@ before_script:
 
 Package:
   stage: Package 🐳
-  image: docker
+  image: docker:18
   services:
-    - docker:dind
+    - docker:18-dind
   script:
     - docker build -t $CI_REGISTRY_IMAGE:alpine3 -f alpine3/Dockerfile .
     - docker push $CI_REGISTRY_IMAGE:alpine3
@@ -23,9 +23,9 @@ Package:
 
 Push to dockerhub:
   stage: Dockerhub 🚀
-  image: docker
+  image: docker:18
   services:
-    - docker:dind
+    - docker:18-dind
   script:
     - docker pull $CI_REGISTRY_IMAGE:alpine3
     - docker tag $CI_REGISTRY_IMAGE:alpine3 florianperrot/ansible-playbook:alpine3
